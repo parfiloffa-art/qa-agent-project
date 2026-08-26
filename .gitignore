@@ -1,0 +1,17 @@
+# IDE
+.idea/
+*.iml
+
+# Build
+target/
+
+# OS
+.DS_Store
+
+# Secrets
+.env
+.env.*
+secrets.properties
+credentials.properties
+
+
