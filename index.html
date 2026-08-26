@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Локальный калькулятор аннуитетных и дифференцированных кредитных платежей.">
+    <title>Кредитный калькулятор — Банк Прикола</title>
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#calculator" aria-label="Банк Прикола — к калькулятору">
+        <span class="brand__mark" aria-hidden="true">БП</span>
+        <span>Банк Прикола</span>
+      </a>
+      <span class="header-note">Не банк. Зато считаем честно.</span>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <div class="hero__copy">
+          <p class="eyebrow">Кредитный калькулятор</p>
+          <h1 id="page-title">Посчитаем кредит.<br><span>Без звонков и серьёзных лиц</span></h1>
+          <p class="hero__lead">
+            Сравните две схемы платежей и узнайте переплату заранее. Расчёт предварительный — зато без мелкого шрифта.
+          </p>
+        </div>
+        <div class="hero-sticker" aria-hidden="true">
+          <span>₽</span>
+          <strong>проценты<br>на месте</strong>
+        </div>
+      </section>
+
+      <section class="workspace" id="calculator" aria-label="Расчёт кредита">
+        <form class="calculator-card" id="loan-form" novalidate>
+          <div class="card-heading">
+            <div>
+              <p class="eyebrow">Параметры</p>
+              <h2>Что считаем?</h2>
+            </div>
+            <button class="reset-button" id="reset-button" type="reset" hidden>
+              <span aria-hidden="true">↺</span> Сбросить
+            </button>
+          </div>
+
+          <div class="field">
+            <label for="amount">Сумма кредита</label>
+            <div class="input-shell input-shell--suffix">
+              <input
+                id="amount"
+                name="amount"
+                type="text"
+                inputmode="numeric"
+                autocomplete="off"
+                placeholder="Например, 500 000"
+                aria-describedby="amount-hint amount-error"
+                aria-invalid="false"
+              >
+              <span aria-hidden="true">₽</span>
+            </div>
+            <p class="field-hint" id="amount-hint">От 10 000 до 30 000 000 ₽, только целые рубли</p>
+            <p class="field-error" id="amount-error" role="alert" hidden></p>
+          </div>
+
+          <div class="field">
+            <label for="rate">Годовая процентная ставка</label>
+            <div class="input-shell input-shell--suffix">
+              <input
+                id="rate"
+                name="rate"
+                type="text"
+                inputmode="decimal"
+                autocomplete="off"
+                placeholder="Например, 12,5"
+                aria-describedby="rate-hint rate-error"
+                aria-invalid="false"
+              >
+              <span aria-hidden="true">%</span>
+            </div>
+            <p class="field-hint" id="rate-hint">От 0,01 до 133%, не больше двух знаков после запятой</p>
+            <p class="field-error" id="rate-error" role="alert" hidden></p>
+          </div>
+
+          <fieldset class="field fieldset" id="term-fieldset">
+            <legend>Срок кредита</legend>
+            <div class="segmented segmented--compact" aria-label="Единица срока">
+              <label>
+                <input type="radio" name="term-unit" value="months" checked>
+                <span>Месяцы</span>
+              </label>
+              <label>
+                <input type="radio" name="term-unit" value="years">
+                <span>Годы</span>
+              </label>
+            </div>
+
+            <div id="term-months-group">
+              <label class="sr-only" for="term-months">Срок в месяцах</label>
+              <div class="input-shell input-shell--suffix">
+                <input
+                  id="term-months"
+                  name="term-months"
+                  type="text"
+                  inputmode="numeric"
+                  autocomplete="off"
+                  placeholder="Например, 24"
+                  aria-describedby="term-hint term-error"
+                  aria-invalid="false"
+                >
+                <span aria-hidden="true">мес.</span>
+              </div>
+            </div>
+
+            <div class="term-years" id="term-years-group" hidden>
+              <div>
+                <label for="term-years">Полные годы</label>
+                <div class="input-shell input-shell--suffix">
+                  <input
+                    id="term-years"
+                    name="term-years"
+                    type="text"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    placeholder="Например, 2"
+                    aria-describedby="term-hint term-error"
+                    aria-invalid="false"
+                  >
+                  <span aria-hidden="true">лет</span>
+                </div>
+              </div>
+              <div>
+                <label for="term-remainder">Остаток месяцев</label>
+                <div class="input-shell input-shell--suffix">
+                  <input
+                    id="term-remainder"
+                    name="term-remainder"
+                    type="text"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    placeholder="0"
+                    aria-describedby="term-hint term-error"
+                    aria-invalid="false"
+                  >
+                  <span aria-hidden="true">мес.</span>
+                </div>
+              </div>
+            </div>
+            <p class="field-hint" id="term-hint">От 1 до 360 месяцев включительно</p>
+            <p class="field-error" id="term-error" role="alert" hidden></p>
+          </fieldset>
+
+          <fieldset class="field fieldset payment-choice">
+            <legend>Тип платежей</legend>
+            <div class="segmented segmented--cards">
+              <label>
+                <input type="radio" name="payment-type" value="annuity" checked>
+                <span>
+                  <strong>Аннуитетные</strong>
+                  <small>Одинаковая сумма каждый месяц</small>
+                </span>
+              </label>
+              <label>
+                <input type="radio" name="payment-type" value="differentiated">
+                <span>
+                  <strong>Дифференцированные</strong>
+                  <small>Платёж уменьшается со временем</small>
+                </span>
+              </label>
+            </div>
+          </fieldset>
+
+          <p class="form-footnote">
+            Результат появится сам, когда всё заполнено правильно. Кнопку «Рассчитать» мы тоже посчитали лишней.
+          </p>
+        </form>
+
+        <aside class="empty-result-card" id="empty-result" aria-hidden="true">
+          <div class="empty-result-card__icon" aria-hidden="true">≈</div>
+          <h2>Здесь появится расчёт</h2>
+          <p>Заполните три параметра слева — и цифры сами встанут на свои места.</p>
+          <div class="fake-chart" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+        </aside>
+
+        <div class="results" id="results" aria-live="polite" hidden>
+          <article class="result-card result-card--primary">
+            <div class="result-kicker">
+              <span class="status-dot" aria-hidden="true"></span>
+              Готово. Магии нет, проценты есть
+            </div>
+            <div class="result-heading">
+              <div>
+                <p class="eyebrow">Ваш расчёт</p>
+                <h2 id="selected-scheme-title">Аннуитетные платежи</h2>
+              </div>
+              <span class="scheme-badge" id="selected-scheme-badge">Ровный ритм</span>
+            </div>
+
+            <dl class="result-params" aria-label="Исходные параметры">
+              <div><dt>Сумма</dt><dd id="summary-amount"></dd></div>
+              <div><dt>Ставка</dt><dd id="summary-rate"></dd></div>
+              <div><dt>Срок</dt><dd id="summary-term"></dd></div>
+            </dl>
+
+            <dl class="metrics" id="result-metrics"></dl>
+            <p class="overpayment-note">Та самая сумма, про которую лучше знать заранее.</p>
+            <button class="schedule-toggle" id="schedule-toggle" type="button" aria-expanded="false" aria-controls="schedule" hidden>
+              Показать график <span aria-hidden="true">↓</span>
+            </button>
+          </article>
+
+          <article class="result-card comparison-card">
+            <div class="comparison-heading">
+              <div>
+                <p class="eyebrow">Сравнение</p>
+                <h2>Два способа платить.<br>Оба почему-то деньгами</h2>
+              </div>
+              <span class="comparison-sticker" aria-hidden="true">vs</span>
+            </div>
+            <div class="table-scroll">
+              <table class="comparison-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Показатель</th>
+                    <th scope="col">Аннуитетная</th>
+                    <th scope="col">Дифференцированная</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">Характер платежей</th>
+                    <td id="comparison-annuity-character"></td>
+                    <td id="comparison-diff-character"></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Общая сумма выплат</th>
+                    <td id="comparison-annuity-total"></td>
+                    <td id="comparison-diff-total"></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Переплата</th>
+                    <td id="comparison-annuity-overpayment"></td>
+                    <td id="comparison-diff-overpayment"></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="difference" id="difference-text"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="schedule-card" id="schedule" aria-labelledby="schedule-title" hidden>
+        <div class="schedule-heading">
+          <div>
+            <p class="eyebrow">Помесячно</p>
+            <h2 id="schedule-title">График дифференцированных платежей</h2>
+          </div>
+          <span id="schedule-count"></span>
+        </div>
+        <div class="table-scroll table-scroll--schedule">
+          <table class="schedule-table">
+            <thead>
+              <tr>
+                <th scope="col">Месяц</th>
+                <th scope="col">Платёж</th>
+                <th scope="col">Основной долг</th>
+                <th scope="col">Проценты</th>
+                <th scope="col">Остаток</th>
+              </tr>
+            </thead>
+            <tbody id="schedule-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="disclaimer" aria-label="Важная информация">
+        <span aria-hidden="true">i</span>
+        <p>
+          «Банк Прикола» — вымышленный бренд. Расчёт предварительный, не является офертой, финансовой рекомендацией или обещанием одобрения кредита.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <span>Банк Прикола</span>
+      <span>Никаких заявок. Только математика.</span>
+    </footer>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
